@@ -1,0 +1,31 @@
+<html>
+
+<head>
+    <title>Detailed statistics</title>
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    {% for place, place_stats in grouped_stats.items() %}
+        <h2>{{ place }}</h2>
+        {% for choice, choice_stats in place_stats.items() %}
+            <h3>{{ choice }}</h3>
+            {% for content, content_stats in choice_stats.items() %}
+                <h4>{{ content }}</h4>
+                <ul>
+                    <li><b>Probability:</b> {{ content_stats['probability'] }}</li>
+                    <li><b>Started:</b> {{ content_stats['created'] }} / <b>Stopped:</b> {{ content_stats['deactivated'] }}</li>
+                    <li><b>Run time:</b> {{ content_stats['time_until'] - content_stats['created'] }}</li>
+                </ul>
+                <ul>
+                    {% for metric in ['sessions', 'seconds', 'video_loaded', 'video_rejected', 'instagram_click', 'sessions_video_loaded', 'sessions_video_rejected', 'sessions_instagram_click', 'video_loaded_seconds'] %}
+                    <li><b>{{ metric }}:</b> {{ content_stats[metric] }}</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+INSERT INTO place (id, name) VALUES ('1129', 'Paljassaare');
+INSERT INTO place (id, name) VALUES ('e166', 'Prangli');
+INSERT INTO place (id, name) VALUES ('ee90', 'New1');
+INSERT INTO place (id, name) VALUES ('7Vol', 'Kodulahe');
+INSERT INTO place (id, name) VALUES ('Gz5N', 'Temp 2');
+INSERT INTO place (id, name) VALUES ('DrnU', 'Temp 3');
+INSERT INTO place (id, name) VALUES ('gpPB', 'Kotka Kauplus');
+
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', '1129', 'hue_effects1.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', '1129', 'hue_effects2.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'Gz5N', 'hue_effects1.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'Gz5N', 'hue_effects2.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'e166', 'hue_effects1.html', 1.0);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'd906', 'hue_effects1.html', 1.0);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'ee90', 'hue_effects1.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'ee90', 'hue_effects2.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', '7Vol', 'hue_effects1.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', '7Vol', 'hue_effects2.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'DrnU', 'hue_effects1.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'DrnU', 'hue_effects2.html', 0.5);
+INSERT INTO place_content (name, place_id, template, probability) VALUES ('Hue effects', 'gpPB', 'hue_effects_legal.html', 1.0);

@@ -1,0 +1,11 @@
+<div id="social">
+    <script type="text/javascript">
+        function instaClick() {
+            $.post('/log', { place_id: '{{ place_id }}', event: 'INSTAGRAM_CLICK' });
+            location.href = 'instagram://user?username={{ ig_profile }}';
+        }
+    </script>
+
+    <a href="javascript:instaClick()"><img width="8%" height="8%" src="/s/ig.png"/></a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+</div>

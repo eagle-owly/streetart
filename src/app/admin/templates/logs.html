@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <title>View activity logs</title>
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <br/>
+    {% if page > 0 %}
+    <span class="item"><a href="/vault/logs/{{ page - 1 }}">Prev page</a></span>
+    {% endif %}
+    <span class="item"><a href="/vault/logs/{{ page + 1 }}">Next page</a></span>
+
+    <table border="1" cellpadding="0" cellspacing="0">
+        <tr>
+            <td><b>Session</b></td>
+            <td><b>Event</b></td>
+            <td><b>Created</b></td>
+            <td><b>Seconds</b></td>
+            <td><b>Details</b></td>
+        </tr>
+
+        {% for session_id, session in sessions.items() %}
+        <tr>
+            <td rowspan="{{ session['events']|length }}">
+                <b>Session ID</b>: {{ session_id }}<br/>
+                <b>Created</b>: {{ session['created'].strftime('%Y-%m-%d %H:%M:%S') }}<br/>
+                <b>Place</b>: {{ session['place'] }}<br/>
+                <b>IP address</b>: {{ session['ip_address'] }}<br/>
+                <b>User agent</b>: {{ session['user_agent'] }}<br/>
+                <b>Content selection</b>: {{ session['test_name'] }}<br/>
+                <b>Content shown</b>: {{ session['content'] }}<br/>
+                <b>Total seconds</b>: {{ session['total_seconds'] }}<br/>
+                <span class="item"><a href="/vault/delete/{{ page }}/{{ session_id }}">Delete</a></span>
+            </td>
+
+            {% for event in session['events'] %}
+                {% if loop.index > 1 %}
+                    </tr><tr>
+                {% endif %}
+
+                <td>{{ event['event'] }}</td>
+                <td>{{ event['created'].strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{% if event['seconds'] > 0 %}{{ event['seconds'] }}{% endif %}</td>
+                <td>{% if event['details'] %}{{ event['details'] }}{% endif %}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>

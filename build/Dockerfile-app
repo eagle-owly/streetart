@@ -1,0 +1,15 @@
+FROM python:3.9.2-buster
+ARG DEBIAN_FRONTEND=noninteractive
+
+COPY ./requirements.txt /
+COPY ./src /
+WORKDIR /
+
+RUN python3.9 -m pip install -r /requirements.txt
+
+RUN apt-get update
+RUN apt-get install -y nginx
+
+RUN rm /etc/nginx/sites-enabled/default
+COPY ./build/nginx-site-streetart /etc/nginx/sites-enabled/default
+COPY ./build/keys /app/keys

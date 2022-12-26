@@ -1,0 +1,11 @@
+import datetime
+
+MYSQL_DATABASE_HOST = 'db'
+MYSQL_DATABASE_USER = 'streetart'
+MYSQL_DATABASE_PASSWORD = '...'
+MYSQL_DATABASE_DB = 'streetart'
+SECRET_KEY = '...'
+ADMIN_PASSWORD = '...'
+PERMANENT_SESSION_LIFETIME = datetime.timedelta(minutes=5)
+IG_PROFILE = 'freemc2'
+LOG_FILE = './app.log'

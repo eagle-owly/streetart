@@ -1,0 +1,94 @@
+<html>
+
+<head>
+    <title>Color calculator</title>
+
+    <style>
+        #colorbox {
+            width: 70;
+            display: inline-block;
+            text-align: center
+        }
+        p, span {
+            font-family: Arial, sans-serif;
+        }
+        td {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <form method="post" action="/tools/color_calc" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td>Upload image:</td><td><input type="file" name="image"></td>
+            </tr>
+            <tr>
+                <td>Width (m):</td><td><input type="text" name="width" size="5" value="{{ width }}"></td>
+            </tr>
+            <tr>
+                <td>Height (m):</td><td><input type="text" name="height" size="5" value="{{ height }}"></td>
+            </tr>
+            <tr>
+                <td>m2 per can (400ml):</td><td><input type="text" name="m2_per_can" value="{{ m2_per_can or 3 }}" size="5"></td>
+            </tr>
+            <tr>
+                <td>Layers:</td><td><input type="text" name="layers" value="{{ layers or 4 }}" size="5"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" name="upload" value="Calculate colors"/></td>
+            </tr>
+        </table>
+    </form>
+
+    {% if error %}
+        <p>Too many colors detected. Looks like you've uploaded a photo or a drawing with too heavy artifacts.</p>
+    {% endif %}
+
+    {% if results %}
+        <img src="data:image/jpeg;base64,{{ base64_img }}"/><br/><br/>
+
+        <p>
+            Found colors: <b>{{ results|length }}</b><br/>
+            Total area: <b>{{ total_area }} m<sup>2</sup></b><br/>
+            Total cans: <b>{{ total_cans }}</b>
+        </p>
+
+        <table>
+        {% for result in results %}
+            <tr>
+                <td style="background-color: {{ result['spray_rgb'] }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>{{ result['area_pct'] }}%</td>
+                <td>{{ result['spray_name'] }}</td>
+                <td>{{ result['n_cans'] }} cans</td>
+                <td>{{ result['area_m2'] }} m<sup>2</sup></td>
+                <td>
+                    {% for found in result['found_colors'] %}
+                    <span id="colorbox" style="background-color: {{ found['bg_color'] }}; color: {{ found['txt_color'] }}">{{ found['bg_color'] }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+
+        <br/><br/>
+        <script type="text/javascript">
+            function download() {
+                var a = document.createElement('a');
+                a.download = 'colors.html';
+                a.title = 'Download color breakdown';
+                a.innerHTML = 'Download color breakdown';
+
+                var dom = document.getElementsByTagName('html')[0].innerHTML;
+                a.href = 'data:text/html;base64,' + btoa(dom);
+                a.click();
+            }
+        </script>
+
+        <input type="button" name="upload" value="Download" onclick="download()"/>
+    {% endif %}
+</body>
+
+</html>

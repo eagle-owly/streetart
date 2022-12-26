@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reality?</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous"></script>
+    {% include 'style.html' %}
+</head>
+
+<body onload="start();">
+    <div id="content">
+        <div id="social">
+            <script type="text/javascript">
+                function instaClick() {
+                    $.post('/log', { place_id: '{{ place_id }}', event: 'INSTAGRAM_CLICK' });
+                    location.href = 'instagram://user?username=eagle.owly';
+                }
+            </script>
+
+            <a href="javascript:instaClick()"><img width="8%" height="8%" src="/s/ig.png"/></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+
+        <div id="normal">
+            <h1 class="type1">Reality is different.<br/>Turn your camera around.</h1>
+            <video autoplay playsinline width="100%" height="100%"></video>
+        </div>
+        <div id="fallback" style="display: none">
+            <div id="outer">
+                <div id="inner">
+                    <h3>Something remained</h3>
+                    <h3>hidden from you</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const video = document.querySelector('video');
+
+        var saturation = 0;
+        var saturation_reverse = false;
+        var blur = 0;
+        var blur_reverse = false;
+        var hue_rotate = 0;
+
+        function start() {
+            setInterval(changeEffects, 100);
+            setInterval(ping, 1000);
+        }
+
+        function ping() {
+            $.post('/ping');
+        }
+
+        function fallback() {
+            $('#normal').css('display', 'none');
+            $('body').css('background-image', 'url(/s/fallback.jpg)');
+            $('#fallback').css('display', 'block');
+        }
+
+        function changeEffects() {
+            if (saturation == 4 || !saturation_reverse) {
+                saturation_reverse = false;
+                saturation += 4;
+            }
+            if (saturation == 28 || saturation_reverse) {
+                saturation_reverse = true;
+                saturation -= 4;
+                changed = true;
+            }
+
+            hue_rotate = hue_rotate < 360 ? hue_rotate + 18 : 0;
+            blur = 0;
+
+            video.style.cssText = '-webkit-filter: blur(' + blur + ') saturate(' + saturation + ') hue-rotate(' + hue_rotate + 'deg); ' +
+                                  '-moz-filter: blur(' + blur + ') saturate(' + saturation + ') hue-rotate(' + hue_rotate + 'deg); ' +
+                                   '-o-filter: blur(' + blur + ') saturate(' + saturation + ') hue-rotate(' + hue_rotate + 'deg); ' +
+                                   '-ms-filter: blur(' + blur + ') saturate(' + saturation + ') hue-rotate(' + hue_rotate + 'deg); ' +
+                                   'filter: blur(' + blur + ') saturate(' + saturation + ') hue-rotate(' + hue_rotate + 'deg);';
+        }
+
+        function hasGetUserMedia() {
+            return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+        }
+
+        window.onfocus = function() {
+            $.post('/log', { place_id: '{{ place_id }}', event: 'WINDOW_FOCUS' });
+        }
+
+        window.onblur = function() {
+            $.post('/log', { place_id: '{{ place_id }}', event: 'WINDOW_BLUR' });
+        }
+
+        if (hasGetUserMedia()) {
+            const constraints = {
+                video: {
+                    facingMode: 'environment'
+                }
+            };
+            const video = document.querySelector('video');
+
+            navigator.mediaDevices.getUserMedia(constraints).then(
+                stream => {
+                    video.srcObject = stream;
+
+                    return new Promise((resolve, reject) => {
+                        video.onloadeddata = () => {
+                            $.post('/log', { place_id: '{{ place_id }}', event: 'VIDEO_LOADED' });
+                        }
+                    });
+                },
+                error => {
+                    $.post('/log', { place_id: '{{ place_id }}', event: 'VIDEO_REJECTED', details: String(error) });
+                    fallback();
+                }
+            );
+        } else {
+            $.post('/log', { place_id: '{{ place_id }}', event: 'VIDEO_UNSUPPORTED' });
+            fallback();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+echo Starting gunicorn...
+nohup gunicorn -w 3 -b unix:/var/run/streetart.sock -m 000 app.wsgi:app &
+sleep 5
+echo Starting nginx...
+/etc/init.d/nginx start
+while true; do sleep 1000; done

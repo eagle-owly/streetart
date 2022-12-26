@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  db:
+    image: mysql:8.0.20
+    container_name: streetart-db
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ...
+      MYSQL_DATABASE: streetart
+      MYSQL_USER: streetart
+      MYSQL_PASSWORD: ...
+      TZ: Europe/Tallinn
+    ports:
+      - 127.0.0.1:3306:3306/tcp
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+
+  app:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile-app
+    image: streetart
+    container_name: streetart
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+    depends_on:
+      - db
+    volumes:
+      - images:/var/images
+    command: /bin/bash ./start-app.sh
+    environment:
+      TZ: Europe/Tallinn
+
+volumes:
+  mysql_data:
+  images:
